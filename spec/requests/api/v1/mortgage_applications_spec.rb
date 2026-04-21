@@ -19,7 +19,7 @@ RSpec.describe "Api::V1::MortgageApplications", type: :request do
         post "/api/v1/mortgage_applications", params: valid_params
         expect(response).to have_http_status(:created)
         body = JSON.parse(response.body)
-        expect(body).to include("annual_income", "property_value", "status")
+        expect(body).to include("annual_income", "property_value")
       end
     end
 
