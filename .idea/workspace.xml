@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97fdba98-22d9-438d-afcc-190db505f646" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/controllers/api/v1/mortgage_applications_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gemfile" beforeDir="false" afterPath="$PROJECT_DIR$/Gemfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gemfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Gemfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
+    <list default="true" id="97fdba98-22d9-438d-afcc-190db505f646" name="Changes" comment="Model, controller and the API routes for mortgage application">
+      <change afterPath="$PROJECT_DIR$/spec/requests/api/v1/mortgage_applications_spec.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/api/v1/mortgage_applications_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/v1/mortgage_applications_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/mortgage_application.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/mortgage_application.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spec/factories/mortgage_applications.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/factories/mortgage_applications.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spec/models/mortgage_application_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/models/mortgage_application_spec.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spec/rails_helper.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/rails_helper.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +25,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "DanukaH"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/DanukaH/mortgage_api.git",
+    "accountId": "d64fdec0-6080-423c-b804-5613aacc2644"
+  }
+}]]></component>
   <component name="LogFilters">
     <option name="FILTER_ERRORS" value="false" />
     <option name="FILTER_WARNINGS" value="false" />
@@ -307,12 +322,43 @@
       <option name="presentableId" value="Default" />
       <updated>1776678010687</updated>
       <workItem from="1776678012052" duration="634000" />
-      <workItem from="1776678662088" duration="10271000" />
+      <workItem from="1776678662088" duration="13305000" />
     </task>
+    <task id="LOCAL-00001" summary="Setting up the project with RSpec testing and other minor details">
+      <option name="closed" value="true" />
+      <created>1776724724960</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776724724960</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Migration: Create mortgage_applications">
+      <option name="closed" value="true" />
+      <created>1776724808615</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1776724808615</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Model, controller and the API routes for mortgage application">
+      <option name="closed" value="true" />
+      <created>1776724864892</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1776724864892</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Setting up the project with RSpec testing and other minor details" />
+    <MESSAGE value="Migration: Create mortgage_applications" />
+    <MESSAGE value="Model, controller and the API routes for mortgage application" />
+    <option name="LAST_COMMIT_MESSAGE" value="Model, controller and the API routes for mortgage application" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/mortgage_api@mortgage_api.rcov" NAME="mortgage_api Coverage Results" MODIFIED="1776723946772" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
