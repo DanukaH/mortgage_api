@@ -1,7 +1,7 @@
 module Api
   module V1
     class MortgageApplicationsController < ApplicationController
-      before_action :set_application, only: [ :show ]
+      before_action :set_application, only: [ :show, :assessment ]
 
       def index
         @applications = MortgageApplication.all
@@ -22,6 +22,12 @@ module Api
         render json: @application, status: :ok
       end
 
+      def assessment
+        result = AffordabilityAssessor.new(@application).assess
+        @application.update(status: result[:decision])
+        render json: result, status: :ok
+      end
+
       private
 
       def set_application
@@ -31,7 +37,7 @@ module Api
       end
 
       def application_params
-        params.expect(mortgage_application: [ :annual_income, :monthly_expenses, :deposit_amount, :property_value, :term_years ])
+        params.require(:mortgage_application).permit([ :annual_income, :monthly_expenses, :deposit_amount, :property_value, :term_years ])
       end
     end
   end
