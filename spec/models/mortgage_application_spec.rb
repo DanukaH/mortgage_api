@@ -15,5 +15,41 @@ RSpec.describe MortgageApplication, type: :model do
     it { is_expected.to validate_numericality_of(:deposit_amount).is_greater_than(0) }
     it { is_expected.to validate_numericality_of(:property_value).is_greater_than(0) }
     it { is_expected.to validate_numericality_of(:term_years).only_integer.is_greater_than(0).is_less_than_or_equal_to(40) }
+
+    it { is_expected.to validate_inclusion_of(:status).in_array(MortgageApplication::STATUS) }
+
+    describe 'deposit vs property value' do
+      it 'is invalid when deposit equals property value' do
+        application.deposit_amount = application.property_value
+        expect(application).not_to be_valid
+        expect(application.errors[:deposit_amount]).to include("must be less than the property value")
+      end
+
+      it 'is invalid when deposit exceeds property value' do
+        application.deposit_amount = application.property_value + 1
+        expect(application).not_to be_valid
+        expect(application.errors[:deposit_amount]).to include("must be less than the property value")
+      end
+
+      it 'is valid when deposit is less than property value' do
+        application.deposit_amount = application.property_value - 1
+        expect(application).to be_valid
+      end
+    end
+
+    describe '#loan_amount' do
+      it 'returns property value minus deposit' do
+        application.property_value = 300000
+        application.deposit_amount = 60000
+        expect(application.loan_amount).to eq(240000)
+      end
+    end
+
+    describe 'default status' do
+      it 'defaults to pending before validation' do
+        expect(application).to be_valid
+        expect(application.status).to eq('pending')
+      end
+    end
   end
 end

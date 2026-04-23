@@ -1,5 +1,5 @@
 class MortgageApplication < ApplicationRecord
-  STATUS = %w[pending approved declined ].freeze
+  STATUS = %w[pending approved declined].freeze
 
   validates :annual_income, presence: true, numericality: { greater_than: 0 }
   validates :monthly_expenses, presence: true, numericality: { greater_than_or_equal_to: 0 }

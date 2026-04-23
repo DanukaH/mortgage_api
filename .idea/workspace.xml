@@ -4,14 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97fdba98-22d9-438d-afcc-190db505f646" name="Changes" comment="Fix for failing tests">
-      <change afterPath="$PROJECT_DIR$/app/services/affordability_assessor.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/services/affordability_assessor_spec.rb" afterDir="false" />
+    <list default="true" id="97fdba98-22d9-438d-afcc-190db505f646" name="Changes" comment="Changes to add assessment and affordability logic with tests">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/controllers/api/v1/mortgage_applications_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/v1/mortgage_applications_controller.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models/mortgage_application.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/mortgage_application.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spec/factories/mortgage_applications.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/factories/mortgage_applications.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spec/models/mortgage_application_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/models/mortgage_application_spec.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spec/requests/api/v1/mortgage_applications_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/requests/api/v1/mortgage_applications_spec.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,6 +69,14 @@
     "RSpec.AffordabilityAssessor#assess calculates DTI correctly.executor": "Run",
     "RSpec.AffordabilityAssessor#assess calculates LTV correctly.executor": "Run",
     "RSpec.AffordabilityAssessor.executor": "Run",
+    "RSpec.All specs in spec: mortgage_api.executor": "Run",
+    "RSpec.Api::V1::MortgageApplications.executor": "Run",
+    "RSpec.MortgageApplication validations #loan_amount.executor": "Run",
+    "RSpec.MortgageApplication validations default status.executor": "Run",
+    "RSpec.MortgageApplication validations deposit vs property value is invalid when deposit exceeds property value.executor": "Run",
+    "RSpec.MortgageApplication validations deposit vs property value is valid when deposit is less than property value.executor": "Run",
+    "RSpec.MortgageApplication validations deposit vs property value.executor": "Run",
+    "RSpec.MortgageApplication validations.executor": "Run",
     "Rails.mortgage_api.executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -92,8 +100,8 @@
       <recent name="$PROJECT_DIR$/app/controllers/api/v1" />
     </key>
   </component>
-  <component name="RunManager" selected="RSpec.AffordabilityAssessor">
-    <configuration name="AffordabilityAssessor when DTI is too high returns a declining explanation" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="RSpec.Api::V1::MortgageApplications">
+    <configuration name="Api::V1::MortgageApplications" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
       <module name="mortgage_api" />
       <predefined_log_file enabled="true" id="RUBY_RSPEC" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
@@ -113,11 +121,11 @@
       </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/services/affordability_assessor_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/requests/api/v1/mortgage_applications_spec.rb" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="AffordabilityAssessor when DTI is too high returns a declining explanation" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="Api::V1::MortgageApplications" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
@@ -130,7 +138,7 @@
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
       <method v="2" />
     </configuration>
-    <configuration name="AffordabilityAssessor when DTI is too high" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
+    <configuration name="MortgageApplication validations #loan_amount" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
       <module name="mortgage_api" />
       <predefined_log_file enabled="true" id="RUBY_RSPEC" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
@@ -150,11 +158,11 @@
       </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/services/affordability_assessor_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/models/mortgage_application_spec.rb" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="AffordabilityAssessor when DTI is too high" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="MortgageApplication validations #loan_amount" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
@@ -167,7 +175,7 @@
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
       <method v="2" />
     </configuration>
-    <configuration name="AffordabilityAssessor when LTV is too high" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
+    <configuration name="MortgageApplication validations default status" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
       <module name="mortgage_api" />
       <predefined_log_file enabled="true" id="RUBY_RSPEC" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
@@ -187,11 +195,11 @@
       </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/services/affordability_assessor_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/models/mortgage_application_spec.rb" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="AffordabilityAssessor when LTV is too high" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="MortgageApplication validations default status" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
@@ -204,7 +212,7 @@
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
       <method v="2" />
     </configuration>
-    <configuration name="AffordabilityAssessor when application passes all affordability criteria" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
+    <configuration name="MortgageApplication validations deposit vs property value is invalid when deposit exceeds property value" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
       <module name="mortgage_api" />
       <predefined_log_file enabled="true" id="RUBY_RSPEC" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
@@ -224,11 +232,11 @@
       </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/services/affordability_assessor_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/models/mortgage_application_spec.rb" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="AffordabilityAssessor when application passes all affordability criteria" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="MortgageApplication validations deposit vs property value is invalid when deposit exceeds property value" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
@@ -241,7 +249,7 @@
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
       <method v="2" />
     </configuration>
-    <configuration name="AffordabilityAssessor" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
+    <configuration name="MortgageApplication validations deposit vs property value is valid when deposit is less than property value" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
       <module name="mortgage_api" />
       <predefined_log_file enabled="true" id="RUBY_RSPEC" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
@@ -261,11 +269,11 @@
       </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/services/affordability_assessor_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/models/mortgage_application_spec.rb" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="AffordabilityAssessor" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="MortgageApplication validations deposit vs property value is valid when deposit is less than property value" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
@@ -502,11 +510,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="RSpec.AffordabilityAssessor" />
-        <item itemvalue="RSpec.AffordabilityAssessor when DTI is too high returns a declining explanation" />
-        <item itemvalue="RSpec.AffordabilityAssessor when DTI is too high" />
-        <item itemvalue="RSpec.AffordabilityAssessor when LTV is too high" />
-        <item itemvalue="RSpec.AffordabilityAssessor when application passes all affordability criteria" />
+        <item itemvalue="RSpec.Api::V1::MortgageApplications" />
+        <item itemvalue="RSpec.MortgageApplication validations default status" />
+        <item itemvalue="RSpec.MortgageApplication validations #loan_amount" />
+        <item itemvalue="RSpec.MortgageApplication validations deposit vs property value is valid when deposit is less than property value" />
+        <item itemvalue="RSpec.MortgageApplication validations deposit vs property value is invalid when deposit exceeds property value" />
       </list>
     </recent_temporary>
   </component>
@@ -526,7 +534,7 @@
       <option name="presentableId" value="Default" />
       <updated>1776678010687</updated>
       <workItem from="1776678012052" duration="634000" />
-      <workItem from="1776678662088" duration="35616000" />
+      <workItem from="1776678662088" duration="41031000" />
     </task>
     <task id="LOCAL-00001" summary="Setting up the project with RSpec testing and other minor details">
       <option name="closed" value="true" />
@@ -568,7 +576,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776731711134</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Changes to add assessment and affordability logic with tests">
+      <option name="closed" value="true" />
+      <created>1776975902201</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1776975902201</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -580,7 +596,8 @@
     <MESSAGE value="Model, controller and the API routes for mortgage application" />
     <MESSAGE value="RSpec tests for mortgage application API endpoints and model validations" />
     <MESSAGE value="Fix for failing tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix for failing tests" />
+    <MESSAGE value="Changes to add assessment and affordability logic with tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes to add assessment and affordability logic with tests" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -590,13 +607,21 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor_when_LTV_is_too_high.rcov" NAME="AffordabilityAssessor when LTV is too high Coverage Results" MODIFIED="1776942343291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
-    <SUITE FILE_PATH="coverage/mortgage_api@mortgage_api.rcov" NAME="mortgage_api Coverage Results" MODIFIED="1776940779881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@MortgageApplication_validations_default_status.rcov" NAME="MortgageApplication validations default status Coverage Results" MODIFIED="1776983844833" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor_when_DTI_is_too_high.rcov" NAME="AffordabilityAssessor when DTI is too high Coverage Results" MODIFIED="1776942504165" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@MortgageApplication_validations.rcov" NAME="MortgageApplication validations Coverage Results" MODIFIED="1776983451284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@MortgageApplication_validations_deposit_vs_property_value_is_valid_when_deposit_is_less_than_property_value.rcov" NAME="MortgageApplication validations deposit vs property value is valid when deposit is less than property value Coverage Results" MODIFIED="1776983585811" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@MortgageApplication_validations__loan_amount.rcov" NAME="MortgageApplication validations #loan_amount Coverage Results" MODIFIED="1776983724703" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@All_specs_in_spec__mortgage_api.rcov" NAME="All specs in spec: mortgage_api Coverage Results" MODIFIED="1776980856179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor_assess_calculates_LTV_correctly.rcov" NAME="AffordabilityAssessor#assess calculates LTV correctly Coverage Results" MODIFIED="1776940746114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor_when_application_passes_all_affordability_criteria.rcov" NAME="AffordabilityAssessor when application passes all affordability criteria Coverage Results" MODIFIED="1776941306116" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor.rcov" NAME="AffordabilityAssessor Coverage Results" MODIFIED="1776943722807" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor_assess_calculates_DTI_correctly.rcov" NAME="AffordabilityAssessor#assess calculates DTI correctly Coverage Results" MODIFIED="1776940923642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@Api__V1__MortgageApplications.rcov" NAME="Api::V1::MortgageApplications Coverage Results" MODIFIED="1776984118586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor_when_LTV_is_too_high.rcov" NAME="AffordabilityAssessor when LTV is too high Coverage Results" MODIFIED="1776942343291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@MortgageApplication_validations_deposit_vs_property_value.rcov" NAME="MortgageApplication validations deposit vs property value Coverage Results" MODIFIED="1776983456510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@mortgage_api.rcov" NAME="mortgage_api Coverage Results" MODIFIED="1776980883084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@MortgageApplication_validations_deposit_vs_property_value_is_invalid_when_deposit_exceeds_property_value.rcov" NAME="MortgageApplication validations deposit vs property value is invalid when deposit exceeds property value Coverage Results" MODIFIED="1776983558295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor_when_DTI_is_too_high_returns_a_declining_explanation.rcov" NAME="AffordabilityAssessor when DTI is too high returns a declining explanation Coverage Results" MODIFIED="1776943626097" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
   </component>
 </project>

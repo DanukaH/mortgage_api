@@ -9,12 +9,12 @@ module Api
       end
 
       def create
-        @application = MortgageApplication.create(application_params)
+        @application = MortgageApplication.new(application_params)
 
         if @application.save
           render json: @application, status: :created
         else
-          render json: { errors: @application.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @application.errors.full_messages }, status: :unprocessable_content
         end
       end
 
@@ -24,7 +24,7 @@ module Api
 
       def assessment
         result = AffordabilityAssessor.new(@application).assess
-        @application.update(status: result[:decision])
+        @application.update!(status: result[:decision])
         render json: result, status: :ok
       end
 
