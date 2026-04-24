@@ -13,6 +13,24 @@ RSpec.describe 'Api::V1::MortgageApplications', type: :request do
     }
   end
 
+  describe 'GET /api/v1/mortgage_applications' do
+    let!(:applications) { create_list(:mortgage_application, 3) }
+
+    it 'returns all applications' do
+      get '/api/v1/mortgage_applications'
+      expect(response).to have_http_status(:ok)
+      body = JSON.parse(response.body)
+      expect(body.length).to eq(3)
+    end
+
+    it 'returns an empty array when there are no applications' do
+      MortgageApplication.delete_all
+      get '/api/v1/mortgage_applications'
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)).to eq([])
+    end
+  end
+
   describe 'POST /api/v1/mortgage_applications' do
     context 'with valid params' do
       it 'returns 201 and the created application' do
