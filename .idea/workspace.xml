@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97fdba98-22d9-438d-afcc-190db505f646" name="Changes" comment="Changes to add assessment and affordability logic with tests">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/api/v1/mortgage_applications_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/v1/mortgage_applications_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/mortgage_application.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/mortgage_application.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/factories/mortgage_applications.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/factories/mortgage_applications.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/models/mortgage_application_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/models/mortgage_application_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/requests/api/v1/mortgage_applications_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/requests/api/v1/mortgage_applications_spec.rb" afterDir="false" />
+    <list default="true" id="97fdba98-22d9-438d-afcc-190db505f646" name="Changes" comment="Update to the README to describe the project properly">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +94,44 @@
       <recent name="$PROJECT_DIR$/app/controllers/api/v1" />
     </key>
   </component>
-  <component name="RunManager" selected="RSpec.Api::V1::MortgageApplications">
+  <component name="RunManager" selected="RSpec.All specs in spec: mortgage_api">
+    <configuration name="All specs in spec: mortgage_api" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true">
+      <module name="mortgage_api" />
+      <predefined_log_file enabled="true" id="RUBY_RSPEC" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <envs>
+        <env name="RAILS_ENV" value="test" />
+        <env name="JRUBY_OPTS" value="-X+O" />
+      </envs>
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="$MODULE_DIR$/spec" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="ALL_IN_FOLDER" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_CUSTOM_SPEC_RUNNER" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
+      <method v="2" />
+    </configuration>
     <configuration name="Api::V1::MortgageApplications" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
       <module name="mortgage_api" />
       <predefined_log_file enabled="true" id="RUBY_RSPEC" />
@@ -200,43 +231,6 @@
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="MortgageApplication validations default status" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_CUSTOM_SPEC_RUNNER" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
-      <method v="2" />
-    </configuration>
-    <configuration name="MortgageApplication validations deposit vs property value is invalid when deposit exceeds property value" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
-      <module name="mortgage_api" />
-      <predefined_log_file enabled="true" id="RUBY_RSPEC" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-      <envs>
-        <env name="RAILS_ENV" value="test" />
-        <env name="JRUBY_OPTS" value="-X+O" />
-      </envs>
-      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
-        <COVERAGE_PATTERN ENABLED="true">
-          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
-        </COVERAGE_PATTERN>
-      </EXTENSION>
-      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/models/mortgage_application_spec.rb" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
-      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="MortgageApplication validations deposit vs property value is invalid when deposit exceeds property value" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
@@ -510,11 +504,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="RSpec.All specs in spec: mortgage_api" />
         <item itemvalue="RSpec.Api::V1::MortgageApplications" />
         <item itemvalue="RSpec.MortgageApplication validations default status" />
         <item itemvalue="RSpec.MortgageApplication validations #loan_amount" />
         <item itemvalue="RSpec.MortgageApplication validations deposit vs property value is valid when deposit is less than property value" />
-        <item itemvalue="RSpec.MortgageApplication validations deposit vs property value is invalid when deposit exceeds property value" />
       </list>
     </recent_temporary>
   </component>
@@ -534,7 +528,7 @@
       <option name="presentableId" value="Default" />
       <updated>1776678010687</updated>
       <workItem from="1776678012052" duration="634000" />
-      <workItem from="1776678662088" duration="41031000" />
+      <workItem from="1776678662088" duration="42595000" />
     </task>
     <task id="LOCAL-00001" summary="Setting up the project with RSpec testing and other minor details">
       <option name="closed" value="true" />
@@ -584,7 +578,23 @@
       <option name="project" value="LOCAL" />
       <updated>1776975902201</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Minor refinements to improve the code">
+      <option name="closed" value="true" />
+      <created>1776984858927</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1776984858927</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Update to the README to describe the project properly">
+      <option name="closed" value="true" />
+      <created>1776984939677</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1776984939677</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -597,7 +607,9 @@
     <MESSAGE value="RSpec tests for mortgage application API endpoints and model validations" />
     <MESSAGE value="Fix for failing tests" />
     <MESSAGE value="Changes to add assessment and affordability logic with tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes to add assessment and affordability logic with tests" />
+    <MESSAGE value="Minor refinements to improve the code" />
+    <MESSAGE value="Update to the README to describe the project properly" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update to the README to describe the project properly" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -612,7 +624,7 @@
     <SUITE FILE_PATH="coverage/mortgage_api@MortgageApplication_validations.rcov" NAME="MortgageApplication validations Coverage Results" MODIFIED="1776983451284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@MortgageApplication_validations_deposit_vs_property_value_is_valid_when_deposit_is_less_than_property_value.rcov" NAME="MortgageApplication validations deposit vs property value is valid when deposit is less than property value Coverage Results" MODIFIED="1776983585811" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@MortgageApplication_validations__loan_amount.rcov" NAME="MortgageApplication validations #loan_amount Coverage Results" MODIFIED="1776983724703" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
-    <SUITE FILE_PATH="coverage/mortgage_api@All_specs_in_spec__mortgage_api.rcov" NAME="All specs in spec: mortgage_api Coverage Results" MODIFIED="1776980856179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
+    <SUITE FILE_PATH="coverage/mortgage_api@All_specs_in_spec__mortgage_api.rcov" NAME="All specs in spec: mortgage_api Coverage Results" MODIFIED="1777019257617" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor_assess_calculates_LTV_correctly.rcov" NAME="AffordabilityAssessor#assess calculates LTV correctly Coverage Results" MODIFIED="1776940746114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor_when_application_passes_all_affordability_criteria.rcov" NAME="AffordabilityAssessor when application passes all affordability criteria Coverage Results" MODIFIED="1776941306116" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
     <SUITE FILE_PATH="coverage/mortgage_api@AffordabilityAssessor.rcov" NAME="AffordabilityAssessor Coverage Results" MODIFIED="1776943722807" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="mortgage_api" />
