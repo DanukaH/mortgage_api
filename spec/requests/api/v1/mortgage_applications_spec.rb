@@ -17,7 +17,7 @@ RSpec.describe 'Api::V1::MortgageApplications', type: :request do
     let!(:applications) { create_list(:mortgage_application, 3) }
 
     it 'returns all applications' do
-      get '/api/v1/mortgage_applications'
+      get '/api/v1/mortgage_applications', headers: auth_headers
       expect(response).to have_http_status(:ok)
       body = JSON.parse(response.body)
       expect(body.length).to eq(3)
@@ -25,7 +25,7 @@ RSpec.describe 'Api::V1::MortgageApplications', type: :request do
 
     it 'returns an empty array when there are no applications' do
       MortgageApplication.delete_all
-      get '/api/v1/mortgage_applications'
+      get '/api/v1/mortgage_applications', headers: auth_headers
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)).to eq([])
     end
@@ -34,7 +34,9 @@ RSpec.describe 'Api::V1::MortgageApplications', type: :request do
   describe 'POST /api/v1/mortgage_applications' do
     context 'with valid params' do
       it 'returns 201 and the created application' do
-        post '/api/v1/mortgage_applications', params: valid_params
+        post '/api/v1/mortgage_applications',
+             params: valid_params,
+             headers: auth_headers
         expect(response).to have_http_status(:created)
         body = JSON.parse(response.body)
         expect(body).to include('annual_income', 'property_value')
@@ -43,7 +45,9 @@ RSpec.describe 'Api::V1::MortgageApplications', type: :request do
 
     context 'with invalid params' do
       it 'returns 422 with error messages' do
-        post '/api/v1/mortgage_applications', params: { mortgage_application: { annual_income: -1 } }
+        post '/api/v1/mortgage_applications',
+             params: { mortgage_application: { annual_income: -1 } },
+             headers: auth_headers
         expect(response).to have_http_status(:unprocessable_content)
         expect(JSON.parse(response.body)).to have_key('errors')
       end
@@ -54,13 +58,13 @@ RSpec.describe 'Api::V1::MortgageApplications', type: :request do
     let!(:application) { create(:mortgage_application) }
 
     it 'returns the application' do
-      get "/api/v1/mortgage_applications/#{application.id}"
+      get "/api/v1/mortgage_applications/#{application.id}", headers: auth_headers
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)['id']).to eq(application.id)
     end
 
     it 'returns 404 for an unknown id' do
-      get '/api/v1/mortgage_applications/99999'
+      get '/api/v1/mortgage_applications/99999', headers: auth_headers
       expect(response).to have_http_status(:not_found)
     end
   end
@@ -69,7 +73,8 @@ RSpec.describe 'Api::V1::MortgageApplications', type: :request do
     let!(:application) { create(:mortgage_application) }
 
     it 'returns the affordability result' do
-      get "/api/v1/mortgage_applications/#{application.id}/assessment"
+      get "/api/v1/mortgage_applications/#{application.id}/assessment",
+          headers: auth_headers
       expect(response).to have_http_status(:ok)
       body = JSON.parse(response.body)
       expect(body.keys).to contain_exactly(
@@ -79,12 +84,13 @@ RSpec.describe 'Api::V1::MortgageApplications', type: :request do
     end
 
     it 'updates status to the decision' do
-      get "/api/v1/mortgage_applications/#{application.id}/assessment"
+      get "/api/v1/mortgage_applications/#{application.id}/assessment",
+          headers: auth_headers
       expect(application.reload.status).to be_in(%w[approved declined])
     end
 
     it 'returns 404 for an unknown id' do
-      get '/api/v1/mortgage_applications/99999/assessment'
+      get '/api/v1/mortgage_applications/99999/assessment', headers: auth_headers
       expect(response).to have_http_status(:not_found)
     end
   end

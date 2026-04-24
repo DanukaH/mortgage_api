@@ -1,6 +1,8 @@
 module Api
   module V1
     class MortgageApplicationsController < ApplicationController
+      include Authenticatable
+
       before_action :set_application, only: [ :show, :assessment ]
 
       def index
