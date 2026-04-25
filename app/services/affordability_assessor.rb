@@ -28,6 +28,20 @@ class AffordabilityAssessor
     }
   end
 
+  def assess_and_persist!
+    result = assess
+    application.update!(
+      loan_to_value: result[:loan_to_value],
+      debt_to_income: result[:debt_to_income],
+      maximum_borrowing: result[:maximum_borrowing],
+      decision: result[:decision],
+      explanation: result[:explanation],
+      status: "assessed",
+      assessed_at: Time.current
+    )
+    result
+  end
+
   private
 
   def ltv

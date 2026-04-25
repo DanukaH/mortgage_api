@@ -17,6 +17,7 @@ RSpec.describe MortgageApplication, type: :model do
     it { is_expected.to validate_numericality_of(:term_years).only_integer.is_greater_than(0).is_less_than_or_equal_to(40) }
 
     it { is_expected.to validate_inclusion_of(:status).in_array(MortgageApplication::STATUS) }
+    it { is_expected.to validate_inclusion_of(:decision).in_array(MortgageApplication::DECISION).allow_nil }
 
     describe 'deposit vs property value' do
       it 'is invalid when deposit equals property value' do
@@ -36,20 +37,31 @@ RSpec.describe MortgageApplication, type: :model do
         expect(application).to be_valid
       end
     end
+  end
 
-    describe '#loan_amount' do
-      it 'returns property value minus deposit' do
-        application.property_value = 300000
-        application.deposit_amount = 60000
-        expect(application.loan_amount).to eq(240000)
-      end
+  describe '#loan_amount' do
+    it 'returns property value minus deposit' do
+      application.property_value = 300000
+      application.deposit_amount = 60000
+      expect(application.loan_amount).to eq(240000)
+    end
+  end
+
+  describe '#assessed?' do
+    it 'is false for a new application' do
+      expect(application.assessed?).to be false
     end
 
-    describe 'default status' do
-      it 'defaults to pending before validation' do
-        expect(application).to be_valid
-        expect(application.status).to eq('pending')
-      end
+    it 'is true once status becomes assessed' do
+      application.status = 'assessed'
+      expect(application.assessed?).to be true
+    end
+  end
+
+  describe 'default status' do
+    it 'defaults to pending before validation' do
+      expect(application).to be_valid
+      expect(application.status).to eq('pending')
     end
   end
 end

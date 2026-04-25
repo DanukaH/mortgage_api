@@ -10,11 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_101445) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_25_102841) do
   create_table "mortgage_applications", force: :cascade do |t|
     t.decimal "annual_income"
+    t.datetime "assessed_at"
     t.datetime "created_at", null: false
+    t.decimal "debt_to_income"
+    t.string "decision"
     t.decimal "deposit_amount"
+    t.text "explanation"
+    t.decimal "loan_to_value"
+    t.decimal "maximum_borrowing"
     t.decimal "monthly_expenses"
     t.decimal "property_value"
     t.string "status"

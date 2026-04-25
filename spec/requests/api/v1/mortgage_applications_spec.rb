@@ -72,21 +72,57 @@ RSpec.describe 'Api::V1::MortgageApplications', type: :request do
   describe 'GET /api/v1/mortgage_applications/:id/assessment' do
     let!(:application) { create(:mortgage_application) }
 
-    it 'returns the affordability result' do
-      get "/api/v1/mortgage_applications/#{application.id}/assessment",
-          headers: auth_headers
-      expect(response).to have_http_status(:ok)
-      body = JSON.parse(response.body)
-      expect(body.keys).to contain_exactly(
-        'loan_to_value', 'debt_to_income',
-        'maximum_borrowing', 'decision', 'explanation'
-      )
+    context 'when the application is pending' do
+      it 'enqueues a background job and returns 202' do
+        expect {
+          get "/api/v1/mortgage_applications/#{application.id}/assessment", headers: auth_headers
+        }.to have_enqueued_job(AffordabilityAssessmentJob).with(application.id)
+
+        expect(response).to have_http_status(:accepted)
+        expect(JSON.parse(response.body)['status']).to eq('assessing')
+      end
+
+      it 'moves the application status to assessing' do
+        get "/api/v1/mortgage_applications/#{application.id}/assessment", headers: auth_headers
+        expect(application.reload.status).to eq('assessing')
+      end
     end
 
-    it 'updates status to the decision' do
-      get "/api/v1/mortgage_applications/#{application.id}/assessment",
-          headers: auth_headers
-      expect(application.reload.status).to be_in(%w[approved declined])
+    context 'when the application is already being assessed' do
+      before { application.update!(status: 'assessing') }
+
+      it 'returns 202 without enqueuing another job' do
+        expect {
+          get "/api/v1/mortgage_applications/#{application.id}/assessment", headers: auth_headers
+        }.not_to have_enqueued_job(AffordabilityAssessmentJob)
+
+        expect(response).to have_http_status(:accepted)
+      end
+    end
+
+    context 'when the application has been assessed' do
+      before do
+        perform_enqueued_jobs do
+          AffordabilityAssessmentJob.perform_later(application.id)
+        end
+      end
+
+      it 'has status assessed' do
+        expect(application.reload.status).to eq('assessed')
+      end
+
+      it 'has a decision of approved or declined' do
+        expect(application.reload.decision).to be_in(%w[approved declined])
+      end
+
+      it 'returns the cached result with 200' do
+        get "/api/v1/mortgage_applications/#{application.id}/assessment", headers: auth_headers
+
+        expect(response).to have_http_status(:ok)
+        body = JSON.parse(response.body)
+        expect(body.keys).to contain_exactly('loan_to_value', 'debt_to_income', 'maximum_borrowing',
+                                             'decision', 'explanation', 'assessed_at')
+      end
     end
 
     it 'returns 404 for an unknown id' do

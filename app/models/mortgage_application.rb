@@ -1,5 +1,6 @@
 class MortgageApplication < ApplicationRecord
-  STATUS = %w[pending approved declined].freeze
+  STATUS = %w[pending assessing assessed].freeze
+  DECISION = %w[approved declined].freeze
 
   validates :annual_income, presence: true, numericality: { greater_than: 0 }
   validates :monthly_expenses, presence: true, numericality: { greater_than_or_equal_to: 0 }
@@ -7,6 +8,7 @@ class MortgageApplication < ApplicationRecord
   validates :property_value, presence: true, numericality: { greater_than: 0 }
   validates :term_years, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 40 }
   validates :status, inclusion: { in: STATUS }
+  validates :decision, inclusion: { in: DECISION }, allow_nil: true
 
   validate :deposit_less_than_property_value
 
@@ -14,6 +16,10 @@ class MortgageApplication < ApplicationRecord
 
   def loan_amount
     property_value - deposit_amount
+  end
+
+  def assessed?
+    status == "assessed"
   end
 
   private

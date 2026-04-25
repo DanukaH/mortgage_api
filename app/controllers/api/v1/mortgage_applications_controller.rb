@@ -25,12 +25,30 @@ module Api
       end
 
       def assessment
-        result = AffordabilityAssessor.new(@application).assess
-        @application.update!(status: result[:decision])
-        render json: result, status: :ok
+        case @application.status
+        when "pending"
+          @application.update!(status: "assessing")
+          AffordabilityAssessmentJob.perform_later(@application.id)
+          render json: { status: "assessing", message: "Assessment is being queued"}, status: :accepted
+        when "assessing"
+          render json: { status: "assessing", message: "Assessment is in progress" }, status: :accepted
+        else # status = assessed
+          render json: assessment_payload(@application), status: :ok
+        end
       end
 
       private
+
+      def assessment_payload(application)
+        {
+          loan_to_value: application.loan_to_value,
+          debt_to_income: application.debt_to_income,
+          maximum_borrowing: application.maximum_borrowing,
+          decision: application.decision,
+          explanation: application.explanation,
+          assessed_at: application.assessed_at
+        }
+      end
 
       def set_application
         @application = MortgageApplication.find(params[:id])
