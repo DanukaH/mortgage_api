@@ -4,7 +4,7 @@ A Rails 8.1 JSON API for submitting mortgage applications and running basic affo
 
 ## Tech Stack
 
-- Ruby 3.4
+- Ruby 3.4 (see `.ruby-version`)
 - Rails 8.1.3
 - SQLite3
 - RSpec, FactoryBot, Shoulda Matchers
@@ -32,18 +32,104 @@ API available at `http://localhost:3000`.
 bundle exec rspec
 ```
 
+Covers model validations, affordability business logic, authentication, and end-to-end request behaviour.
+
+## Authentication
+
+All `/api/v1/...` endpoints are protected with **HTTP Basic Authentication**.
+
+Unauthenticated requests return `401 Unauthorized`.
+
+### Credentials
+
+Credentials are stored in Rails encrypted credentials (`config/credentials.yml.enc`):
+
+```yaml
+api_username: <your-username>
+api_password: <your-password>
+```
+
+Edit them with:
+
+```bash
+EDITOR="nano" rails credentials:edit
+```
+
+They can also be overridden at runtime via the `API_USERNAME` and `API_PASSWORD` environment variables, which is handy for Docker / Kamal deploys.
+
+### Example
+
+```bash
+curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications
+```
+
+### Implementation Notes
+
+- Uses the built-in `authenticate_or_request_with_http_basic` helper
+- `ActiveSupport::SecurityUtils.secure_compare` provides constant-time comparison to mitigate timing attacks
+- Both username and password comparisons always run (`&` instead of `&&`) to remove timing side-channels
+- Encapsulated in a concern (`app/controllers/concerns/authenticatable.rb`) so the strategy can be swapped later (e.g. JWT, OAuth) without touching controllers
+
+## Docker
+
+The application ships with a production-ready `Dockerfile` and a Kamal deployment configuration (`config/deploy.yml`).
+
+### Build and run locally
+
+```bash
+docker build -t mortgage_api .
+docker run -p 3000:3000 \
+  -e RAILS_MASTER_KEY=$(cat config/master.key) \
+  mortgage_api
+```
+
+The API will be available at `http://localhost:3000`.
+
+### Deploy with Kamal
+
+```bash
+bin/kamal setup
+bin/kamal deploy
+```
+
 ## Endpoints
+
+All endpoints require Basic Auth credentials.
 
 | Method | Path | Description |
 |--------|------|-------------|
 | `POST` | `/api/v1/mortgage_applications` | Submit a new application |
+| `GET`  | `/api/v1/mortgage_applications` | List all applications (convenience for inspection) |
 | `GET`  | `/api/v1/mortgage_applications/:id` | Retrieve an application |
 | `GET`  | `/api/v1/mortgage_applications/:id/assessment` | Run affordability assessment |
+
+### Example: List applications
+
+```bash
+curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications
+```
+
+**Sample response (`200 OK`):**
+```json
+[
+  {
+    "id": 1,
+    "annual_income": "60000.0",
+    "monthly_expenses": "500.0",
+    "deposit_amount": "30000.0",
+    "property_value": "300000.0",
+    "term_years": 25,
+    "status": "approved",
+    "created_at": "2026-04-20T12:00:00.000Z",
+    "updated_at": "2026-04-20T12:05:00.000Z"
+  }
+]
+```
 
 ### Example: Submit an application
 
 ```bash
-curl -X POST http://localhost:3000/api/v1/mortgage_applications \
+curl -u admin:supersecret123 -X POST http://localhost:3000/api/v1/mortgage_applications \
   -H "Content-Type: application/json" \
   -d '{
     "mortgage_application": {
@@ -56,20 +142,44 @@ curl -X POST http://localhost:3000/api/v1/mortgage_applications \
   }'
 ```
 
+**Sample response (`201 Created`):**
+```json
+{
+  "id": 1,
+  "annual_income": "60000.0",
+  "monthly_expenses": "500.0",
+  "deposit_amount": "30000.0",
+  "property_value": "300000.0",
+  "term_years": 25,
+  "status": "pending",
+  "created_at": "2026-04-20T12:00:00.000Z",
+  "updated_at": "2026-04-20T12:00:00.000Z"
+}
+```
+
 ### Example: Run an assessment
 
 ```bash
-curl http://localhost:3000/api/v1/mortgage_applications/1/assessment
+curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications/1/assessment
 ```
 
-**Sample response:**
+**First call (`202 Accepted`):**
 ```json
 {
-  "loan_to_value": 0.9,
-  "debt_to_income": 0.4157,
-  "maximum_borrowing": 270000.0,
+  "status": "assessing",
+  "message": "Assessment queued — poll this endpoint for the result."
+}
+```
+
+**After the job completes (`200 OK`):**
+```json
+{
+  "loan_to_value": "0.9",
+  "debt_to_income": "0.4157",
+  "maximum_borrowing": "270000.0",
   "decision": "approved",
-  "explanation": "Application meets all affordability criteria. LTV: 90.0%, DTI: 41.6%."
+  "explanation": "Application meets all affordability criteria. LTV: 90.0%, DTI: 41.6%.",
+  "assessed_at": "2026-04-24T12:00:00.000Z"
 }
 ```
 
@@ -77,16 +187,47 @@ curl http://localhost:3000/api/v1/mortgage_applications/1/assessment
 
 ### Architecture
 
-- **API-only Rails app** (`config.api_only = true`)
-- **Versioned routes** (`/api/v1/…`) to support future API evolution without breaking clients
-- **Service object** (`AffordabilityAssessor`) for business logic — keeps models focused on persistence and controllers focused on HTTP
+- **API-only Rails app** (`config.api_only = true`) — lightweight middleware stack
+- **Versioned routes** (`/api/v1/…`) — future evolution without breaking clients
+- **Service object** (`AffordabilityAssessor`) — business logic isolated from models and controllers
+- **Authentication as a concern** — swappable auth strategy without touching controllers
 
+### Project Structure
+
+```
+app/
+  controllers/
+    api/v1/
+      mortgage_applications_controller.rb   # API endpoints
+    concerns/
+      authenticatable.rb                    # HTTP Basic Auth
+  jobs/
+    affordability_assessment_job.rb         # Background assessment job
+  models/
+    mortgage_application.rb                 # Persistence + validations
+  services/
+    affordability_assessor.rb               # Affordability business logic
+config/routes.rb                            # Versioned API routes
+spec/
+  jobs/           # Background job specs
+  models/         # Validation specs
+  services/       # Business logic unit specs
+  requests/       # End-to-end HTTP specs (including auth)
+  factories/      # FactoryBot factories
+  support/        # Shared RSpec helpers (e.g. auth headers)
+```
 ### Data Model
 
-A single `MortgageApplication` model stores applicant data plus a `status` field that tracks lifecycle:
+A single `MortgageApplication` model stores the submission, plus separate fields for **lifecycle** and **outcome**:
 
-- `pending` — submitted but not yet assessed
-- `approved` / `declined` — updated after `/assessment` is called
+- **`status`** — where in the lifecycle the application is:
+  - `pending` — submitted, not yet assessed
+  - `assessing` — assessment job in flight
+  - `assessed` — assessment complete (the outcome lives in `decision`)
+- **`decision`** — the actual affordability outcome, set once status is `assessed`:
+  - `approved` / `declined`
+
+Splitting the two means we can extend the lifecycle later (e.g. `manual_review`, `expired`) without changing the meaning of `decision`, and we can still answer "what's the decision?" without re-running the calculation.
 
 Validations ensure every numerical input is positive and that the deposit is less than the property value.
 
@@ -105,22 +246,53 @@ Three rules are applied. **All must pass** for approval:
 - DTI combines the estimated mortgage repayment with existing monthly expenses
 - Logic is intentionally simplified — it is not a real underwriting model
 
+## Background Processing
+
+Affordability assessments run asynchronously using **Solid Queue** (database-backed Active Job).
+
+### Why Solid Queue over Sidekiq?
+
+Solid Queue ships with Rails 8 and uses the existing database, so there's no Redis dependency to deploy or monitor. For a small service like this — with modest throughput and a single job type — that simplicity is a net win. It also allows jobs to be enqueued inside a database transaction, so a rolled-back transaction cleanly removes any queued work. For higher-throughput workloads or complex batch workflows I'd reach for Sidekiq.
+
+### Flow
+
+1. `GET /api/v1/mortgage_applications/:id/assessment` while `status = pending`:
+    - Enqueues an `AffordabilityAssessmentJob`
+    - Updates status to `assessing`
+    - Returns `202 Accepted`
+2. While the job is processing, the same endpoint returns `202 Accepted` with `status: assessing`
+3. Once the job completes, the endpoint returns `200 OK` with the persisted result (LTV, DTI, decision, etc.)
+
+### Running the Job Processor
+
+In development, start the processor in a separate terminal:
+
+```bash
+bin/jobs
+```
+
+In production (via Kamal), `bin/jobs` can run as a sidecar process.
+
+
 ### Testing Strategy
 
-- **Model specs** — validation rules and helper methods
-- **Service specs** — affordability logic unit-tested in isolation
-- **Request specs** — end-to-end HTTP behaviour
+- **Model specs** — validation rules (including the custom `deposit_less_than_property_value` check) and helper methods
+- **Service specs** — affordability logic unit-tested in isolation (no DB)
+- **Request specs** — end-to-end HTTP behaviour including status transitions
+- **Authentication specs** — `401` for missing / invalid credentials, `200` for valid ones
 
 ### Trade-offs Considered
 
-- **Kept the service pure (no persistence)**: `AffordabilityAssessor#assess` returns a hash without side effects, which makes it easy to test and reason about. Persistence of the decision happens in the controller.
-- **Inline status transition vs state machine**: For this exercise a direct `update` is sufficient. In a larger app, `AASM` or similar would be a natural fit.
-- **No pagination on `index`**: Simple listing is adequate for the exercise.
+- **Service kept pure (no persistence)**: `AffordabilityAssessor#assess` returns a hash without side effects, making it easy to test. Persistence happens via `assess_and_persist!`, called from the job.
+- **Inline status transition vs state machine**: A direct `update!` keeps this exercise focused. In a larger app a gem like AASM would document the lifecycle explicitly.
+- **Separate `status` (lifecycle) and `decision` (outcome) fields**: Cleaner semantics. Status describes where the application *is* in its journey; decision describes the result of the affordability check. Each can evolve independently.
+- **Basic Auth over token/JWT**: Simple, built-in, and matches "basic authentication" from the spec. For a real multi-user API I'd swap this for JWTs or OAuth.
+- **Unpaginated `index`**: Included as a convenience for inspection. A production version would add pagination and filtering.
 
 ### What I'd Add With More Time
 
-- **Background processing** — move the assessment into a Solid Queue job and update the record asynchronously
-- **Basic authentication** — token- or API-key-based for protecting endpoints
-- **Persisted assessment results** — store LTV/DTI/decision on the record to avoid recalculation
-- **OpenAPI documentation** — for easier client integration
-- **Logging & instrumentation** — structured logs + request IDs
+- **Per-user authentication** — replace the shared Basic Auth credentials with real user accounts and JWT tokens
+- **WebSocket / Action Cable notifications** — push assessment results to the client instead of polling
+- **OpenAPI documentation** — generated from request specs
+- **Logging & instrumentation** — structured logs with request IDs + business metrics
+- **Job dashboard** — `mission_control-jobs` for visibility into queue health
