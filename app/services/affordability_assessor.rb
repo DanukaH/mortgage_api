@@ -37,12 +37,24 @@ class AffordabilityAssessor
       decision: result[:decision],
       explanation: result[:explanation],
       status: "assessed",
-      assessed_at: Time.current
+      assessed_at:       Time.current
     )
+    log_assessment_event(result)
     result
   end
 
   private
+
+  def log_assessment_event(result)
+    Rails.logger.info({
+      event: "affordability_assessment_completed",
+      application_id: application.id,
+      decision: result[:decision],
+      loan_to_value: result[:loan_to_value],
+      debt_to_income: result[:debt_to_income],
+      maximum_borrowing: result[:maximum_borrowing]
+    }.to_json)
+  end
 
   def ltv
     application.loan_amount / application.property_value.to_f

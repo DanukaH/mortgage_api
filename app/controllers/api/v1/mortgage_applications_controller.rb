@@ -29,7 +29,8 @@ module Api
         when "pending"
           @application.update!(status: "assessing")
           AffordabilityAssessmentJob.perform_later(@application.id)
-          render json: { status: "assessing", message: "Assessment is being queued"}, status: :accepted
+          log_event("assessment_queued", @application.id)
+          render json: { status: "assessing", message: "Assessment is being queued" }, status: :accepted
         when "assessing"
           render json: { status: "assessing", message: "Assessment is in progress" }, status: :accepted
         else # status = assessed
@@ -38,6 +39,10 @@ module Api
       end
 
       private
+
+      def log_event(name, application_id)
+        Rails.logger.info({ event: name, application_id: application_id }.to_json)
+      end
 
       def assessment_payload(application)
         {
