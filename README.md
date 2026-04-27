@@ -7,6 +7,7 @@ A Rails 8.1 JSON API for submitting mortgage applications and running basic affo
 - Ruby 3.4 (see `.ruby-version`)
 - Rails 8.1.3
 - SQLite3
+- Solid Queue (background jobs)
 - RSpec, FactoryBot, Shoulda Matchers
 
 ## Setup
@@ -26,13 +27,19 @@ bin/rails server
 
 API available at `http://localhost:3000`.
 
+In a separate terminal, start the background job processor:
+
+```bash
+bin/jobs
+```
+
 ## Run Tests
 
 ```bash
 bundle exec rspec
 ```
 
-Covers model validations, affordability business logic, authentication, and end-to-end request behaviour.
+Covers model validations, affordability business logic, authentication, background processing, logging, and end-to-end request behaviour.
 
 ## Authentication
 
@@ -60,7 +67,7 @@ They can also be overridden at runtime via the `API_USERNAME` and `API_PASSWORD`
 ### Example
 
 ```bash
-curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications
+curl -u admin:password123 http://localhost:3000/api/v1/mortgage_applications
 ```
 
 ### Implementation Notes
@@ -70,20 +77,106 @@ curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications
 - Both username and password comparisons always run (`&` instead of `&&`) to remove timing side-channels
 - Encapsulated in a concern (`app/controllers/concerns/authenticatable.rb`) so the strategy can be swapped later (e.g. JWT, OAuth) without touching controllers
 
+## Background Processing
+
+Affordability assessments run asynchronously using **Solid Queue** (database-backed Active Job).
+
+### Why Solid Queue over Sidekiq?
+
+Solid Queue ships with Rails 8 and uses the existing database, so there's no Redis dependency to deploy or monitor. For a small service like this — with modest throughput and a single job type — that simplicity is a net win. It also allows jobs to be enqueued inside a database transaction, so a rolled-back transaction cleanly removes any queued work. For higher-throughput workloads or complex batch workflows I'd reach for Sidekiq.
+
+### Flow
+
+1. `GET /api/v1/mortgage_applications/:id/assessment` while `status = pending`:
+   - Enqueues an `AffordabilityAssessmentJob`
+   - Updates status to `assessing`
+   - Returns `202 Accepted`
+2. While the job is processing, the same endpoint returns `202 Accepted` with `status: assessing`
+3. Once the job completes, the endpoint returns `200 OK` with the persisted result (LTV, DTI, decision, etc.)
+
+### Running the Job Processor
+
+In development, start the processor in a separate terminal:
+
+```bash
+bin/jobs
+```
+
+In production (via Kamal), `bin/jobs` runs as a separate container — see the Docker section below.
+
+## Logging & Instrumentation
+
+The application emits **structured (JSON) log events** for key business moments, so they can be parsed directly by tools like Datadog, Splunk, or CloudWatch Insights.
+
+### Tagged log lines
+
+Every log entry is tagged with the `request_id` and `remote_ip`:
+
+```
+[abcd-1234-…] [203.0.113.5] Started POST "/api/v1/mortgage_applications" ...
+```
+
+This makes it possible to trace a single request across the controller, service, and background job.
+
+### Business events
+
+| Event | Where | Purpose |
+|-------|-------|---------|
+| `assessment_queued` | controller | Records the moment a user requests an assessment |
+| `affordability_assessment_completed` | service | Captures the decision + ratios for auditing/metrics |
+| `affordability_assessment_job_completed` | job | Records `duration_ms` for performance tracking |
+| `affordability_assessment_skipped` | job | Records idempotent skip when already assessed |
+
+### Example
+
+```json
+{"event":"affordability_assessment_completed","application_id":42,"decision":"approved","loan_to_value":0.9,"debt_to_income":0.4157,"maximum_borrowing":270000.0}
+```
+
+### Implementation Notes
+
+- **Monotonic clock for durations** — uses `Process.clock_gettime(Process::CLOCK_MONOTONIC)` rather than `Time.current` so duration measurements are immune to wall-clock adjustments.
+- **JSON-shaped payloads** — pre-formatted so log aggregators can index fields without regex parsing.
+- **Tagged logs** — request ID propagation makes end-to-end tracing trivial in production.
+
 ## Docker
 
 The application ships with a production-ready `Dockerfile` and a Kamal deployment configuration (`config/deploy.yml`).
 
-### Build and run locally
+### Build the image
 
 ```bash
 docker build -t mortgage_api .
-docker run -p 3000:3000 \
-  -e RAILS_MASTER_KEY=$(cat config/master.key) \
-  mortgage_api
 ```
 
-The API will be available at `http://localhost:3000`.
+### Run the application
+
+The API runs as **two processes** — a web server and a background job processor — so we run them as two containers sharing a volume for the SQLite database.
+
+A convenience script `bin/docker-up` is included to start both:
+
+```bash
+bin/docker-up
+```
+
+This:
+- Stops and removes any existing `mortgage_api_web` / `mortgage_api_jobs` containers
+- Starts `mortgage_api_web` (Puma) on port 3000
+- Starts `mortgage_api_jobs` (Solid Queue) processing the queue
+- Mounts a shared `mortgage_api_storage` volume so both containers see the same SQLite database
+
+### Logs
+
+```bash
+docker logs -f mortgage_api_web
+docker logs -f mortgage_api_jobs
+```
+
+### Stop and clean up
+
+```bash
+docker rm -f mortgage_api_web mortgage_api_jobs
+```
 
 ### Deploy with Kamal
 
@@ -106,7 +199,7 @@ All endpoints require Basic Auth credentials.
 ### Example: List applications
 
 ```bash
-curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications
+curl -u admin:password123 http://localhost:3000/api/v1/mortgage_applications
 ```
 
 **Sample response (`200 OK`):**
@@ -119,7 +212,8 @@ curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications
     "deposit_amount": "30000.0",
     "property_value": "300000.0",
     "term_years": 25,
-    "status": "approved",
+    "status": "assessed",
+    "decision": "approved",
     "created_at": "2026-04-20T12:00:00.000Z",
     "updated_at": "2026-04-20T12:05:00.000Z"
   }
@@ -129,7 +223,7 @@ curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications
 ### Example: Submit an application
 
 ```bash
-curl -u admin:supersecret123 -X POST http://localhost:3000/api/v1/mortgage_applications \
+curl -u admin:password123 -X POST http://localhost:3000/api/v1/mortgage_applications \
   -H "Content-Type: application/json" \
   -d '{
     "mortgage_application": {
@@ -160,14 +254,14 @@ curl -u admin:supersecret123 -X POST http://localhost:3000/api/v1/mortgage_appli
 ### Example: Run an assessment
 
 ```bash
-curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications/1/assessment
+curl -u admin:password123 http://localhost:3000/api/v1/mortgage_applications/1/assessment
 ```
 
 **First call (`202 Accepted`):**
 ```json
 {
   "status": "assessing",
-  "message": "Assessment queued — poll this endpoint for the result."
+  "message": "Assessment is being queued"
 }
 ```
 
@@ -183,6 +277,8 @@ curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications/
 }
 ```
 
+The application's `status` becomes `assessed` once the job completes, and the affordability outcome is stored separately in the `decision` field.
+
 ## Design Decisions
 
 ### Architecture
@@ -191,6 +287,7 @@ curl -u admin:supersecret123 http://localhost:3000/api/v1/mortgage_applications/
 - **Versioned routes** (`/api/v1/…`) — future evolution without breaking clients
 - **Service object** (`AffordabilityAssessor`) — business logic isolated from models and controllers
 - **Authentication as a concern** — swappable auth strategy without touching controllers
+- **Background job for assessments** — keeps the API responsive and sets up cleanly for slower future work like credit-bureau integration
 
 ### Project Structure
 
@@ -202,20 +299,25 @@ app/
     concerns/
       authenticatable.rb                    # HTTP Basic Auth
   jobs/
-    affordability_assessment_job.rb         # Background assessment job
+    affordability_assessment_job.rb         # Async assessment job
   models/
     mortgage_application.rb                 # Persistence + validations
   services/
     affordability_assessor.rb               # Affordability business logic
-config/routes.rb                            # Versioned API routes
+bin/
+  docker-up                                 # Starts web + jobs containers
+config/
+  initializers/log_tags.rb                  # Request ID / IP log tagging
+  routes.rb                                 # Versioned API routes
 spec/
   jobs/           # Background job specs
   models/         # Validation specs
-  services/       # Business logic unit specs
+  services/       # Business logic + logging specs
   requests/       # End-to-end HTTP specs (including auth)
   factories/      # FactoryBot factories
-  support/        # Shared RSpec helpers (e.g. auth headers)
+  support/        # Shared RSpec helpers (auth headers, log capture)
 ```
+
 ### Data Model
 
 A single `MortgageApplication` model stores the submission, plus separate fields for **lifecycle** and **outcome**:
@@ -246,47 +348,23 @@ Three rules are applied. **All must pass** for approval:
 - DTI combines the estimated mortgage repayment with existing monthly expenses
 - Logic is intentionally simplified — it is not a real underwriting model
 
-## Background Processing
-
-Affordability assessments run asynchronously using **Solid Queue** (database-backed Active Job).
-
-### Why Solid Queue over Sidekiq?
-
-Solid Queue ships with Rails 8 and uses the existing database, so there's no Redis dependency to deploy or monitor. For a small service like this — with modest throughput and a single job type — that simplicity is a net win. It also allows jobs to be enqueued inside a database transaction, so a rolled-back transaction cleanly removes any queued work. For higher-throughput workloads or complex batch workflows I'd reach for Sidekiq.
-
-### Flow
-
-1. `GET /api/v1/mortgage_applications/:id/assessment` while `status = pending`:
-    - Enqueues an `AffordabilityAssessmentJob`
-    - Updates status to `assessing`
-    - Returns `202 Accepted`
-2. While the job is processing, the same endpoint returns `202 Accepted` with `status: assessing`
-3. Once the job completes, the endpoint returns `200 OK` with the persisted result (LTV, DTI, decision, etc.)
-
-### Running the Job Processor
-
-In development, start the processor in a separate terminal:
-
-```bash
-bin/jobs
-```
-
-In production (via Kamal), `bin/jobs` can run as a sidecar process.
-
-
 ### Testing Strategy
 
 - **Model specs** — validation rules (including the custom `deposit_less_than_property_value` check) and helper methods
 - **Service specs** — affordability logic unit-tested in isolation (no DB)
-- **Request specs** — end-to-end HTTP behaviour including status transitions
+- **Logging specs** — confirm structured events are emitted with the expected shape
+- **Job specs** — verify the assessment is persisted and is idempotent on re-runs
+- **Request specs** — end-to-end HTTP behaviour including async flow and status transitions
 - **Authentication specs** — `401` for missing / invalid credentials, `200` for valid ones
 
 ### Trade-offs Considered
 
-- **Service kept pure (no persistence)**: `AffordabilityAssessor#assess` returns a hash without side effects, making it easy to test. Persistence happens via `assess_and_persist!`, called from the job.
+- **Service kept pure (no persistence) for `assess`**: returns a hash without side effects, making it easy to test. Persistence happens via `assess_and_persist!`, called from the job.
 - **Inline status transition vs state machine**: A direct `update!` keeps this exercise focused. In a larger app a gem like AASM would document the lifecycle explicitly.
 - **Separate `status` (lifecycle) and `decision` (outcome) fields**: Cleaner semantics. Status describes where the application *is* in its journey; decision describes the result of the affordability check. Each can evolve independently.
 - **Basic Auth over token/JWT**: Simple, built-in, and matches "basic authentication" from the spec. For a real multi-user API I'd swap this for JWTs or OAuth.
+- **Solid Queue over Sidekiq**: Zero extra infrastructure for the throughput we need. Easy to swap later if requirements change.
+- **Polling over websockets for assessment results**: Simpler client integration. WebSockets / Action Cable would be the next step for richer real-time UX.
 - **Unpaginated `index`**: Included as a convenience for inspection. A production version would add pagination and filtering.
 
 ### What I'd Add With More Time
@@ -294,5 +372,6 @@ In production (via Kamal), `bin/jobs` can run as a sidecar process.
 - **Per-user authentication** — replace the shared Basic Auth credentials with real user accounts and JWT tokens
 - **WebSocket / Action Cable notifications** — push assessment results to the client instead of polling
 - **OpenAPI documentation** — generated from request specs
-- **Logging & instrumentation** — structured logs with request IDs + business metrics
 - **Job dashboard** — `mission_control-jobs` for visibility into queue health
+- **Metrics export** — push the structured events to Prometheus/StatsD via a sidecar
+```
