@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -e
+
+MASTER_KEY="$(cat config/master.key)"
+
+docker rm -f mortgage_api_web mortgage_api_jobs 2>/dev/null || true
+
+docker run -d --name mortgage_api_web -p 3000:3000 \
+  -e RAILS_MASTER_KEY="$MASTER_KEY" \
+  -v mortgage_api_storage:/rails/storage \
+  mortgage_api
+
+docker run -d --name mortgage_api_jobs \
+  -e RAILS_MASTER_KEY="$MASTER_KEY" \
+  -v mortgage_api_storage:/rails/storage \
+  mortgage_api ./bin/jobs
+
+echo "✅ Web running at http://localhost:3000"
+echo "️ Jobs processor running"
+echo ""
+echo "Logs: docker logs -f mortgage_api_web | mortgage_api_jobs"
+echo "Stop: docker rm -f mortgage_api_web mortgage_api_jobs"
