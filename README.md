@@ -366,9 +366,6 @@ Three rules are applied. **All must pass** for approval:
 - **Solid Queue over Sidekiq**: Zero extra infrastructure for the throughput we need. Easy to swap later if requirements change.
 - **Polling over websockets for assessment results**: Simpler client integration. WebSockets / Action Cable would be the next step for richer real-time UX.
 - **Unpaginated `index`**: Included as a convenience for inspection. A production version would add pagination and filtering.
-
-### What I'd Add With More Time
-
 - **Per-user authentication** — replace the shared Basic Auth credentials with real user accounts and JWT tokens
 - **WebSocket / Action Cable notifications** — push assessment results to the client instead of polling
 - **OpenAPI documentation** — generated from request specs
