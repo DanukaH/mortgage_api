@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AffordabilityAssessmentJob, type: :job do
-  let(:application) { create(:mortgage_application ) }
+  let(:application) { create(:mortgage_application) }
 
   describe '#perform' do
     it ' persists the assessment result on the application' do

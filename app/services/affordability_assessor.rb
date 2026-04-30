@@ -37,7 +37,7 @@ class AffordabilityAssessor
       decision: result[:decision],
       explanation: result[:explanation],
       status: "assessed",
-      assessed_at:       Time.current
+      assessed_at: Time.current
     )
     log_assessment_event(result)
     result
